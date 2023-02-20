@@ -9,6 +9,8 @@ This is a very simple Node Hapi / Swagger application that serves services that 
 There are also other baas services that we have developed, they are forks of this repository, these include:
 
 - [Mint NFT](https://github.com/deakin-launchpad/baas-service-mintNFT)
+- [CREATE COMPANY](https://github.com/deakin-launchpad/baas-service-createcompany)
+- [LOCAL COUNTER](https://github.com/deakin-launchpad/baas-service-localCounter)
 
 There will be many more to come!
 

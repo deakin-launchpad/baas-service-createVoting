@@ -1,4 +1,4 @@
 import SetCountController from "./setCountController/setCountController.js";
-import SetCreateCompany from "./setCreateCompany/createCompanyController.js";
-
-export default { SetCountController, SetCreateCompany };
+import SetCreateGovernor from "./setCreateGovernor/createGovernorController.js";
+import SetFinalizeVoting from "./setFinalizeVoting/finalizeVotingController.js";
+export default { SetCountController, SetCreateGovernor, SetFinalizeVoting };
