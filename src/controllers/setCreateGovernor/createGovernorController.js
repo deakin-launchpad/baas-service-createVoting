@@ -8,18 +8,20 @@ import { connectToAlgorand, getBlockchainAccount, deployBox, respondToServer, de
  * @param {Object} payloadData
  * @param {String} payloadData.jobID
  * @param {String} payloadData.datashopServerAddress
- * @param {Object} payloadData.dataObject
- * @param {Number} payloadData.dataObject.funding
- * @param {String} payloadData.dataObject.proposal
- * @param {Number} payloadData.dataObject.governorToken
- * @param {Object[]} payloadData.dataObject.options
- * @param {Number} payloadData.dataObject.tokenAmount
- * @param {Number} payloadData.dataObject.choiceNumber
- * @param {Number} payloadData.dataObject.votingEnd
+ * @param {Object} payloadData.dataFileURL
+ * @param {string} payloadData.dataFileURL.url
+ * @param {Object} payloadData.dataFileURL.json
+ * @param {Number} payloadData.dataFileURL.json.funding
+ * @param {String} payloadData.dataFileURL.json.proposal
+ * @param {Number} payloadData.dataFileURL.json.governorToken
+ * @param {Object[]} payloadData.dataFileURL.json.options
+ * @param {Number} payloadData.dataFileURL.json.tokenAmount
+ * @param {Number} payloadData.dataFileURL.json.choiceNumber
+ * @param {Number} payloadData.dataFileURL.json.votingEnd
  * @param {Function} callback 
  */
 const createVoting = (payloadData, callback) => {
-	const data = payloadData.dataObject;
+	const data = payloadData.dataFileURL.json;
 	// const data = payloadData.dataObject.json;
 	console.log(data);
 	let algoClient;

@@ -140,8 +140,6 @@ app_global_put
 byte "voting_end"
 txna ApplicationArgs 3
 btoi
-load 0
-+
 app_global_put
 byte "total_number_of_options"
 int 0

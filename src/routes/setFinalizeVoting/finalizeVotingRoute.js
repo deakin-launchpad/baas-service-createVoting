@@ -22,12 +22,15 @@ const finalizeVotingRoute = {
 			payload: Joi.object({
 				jobID: Joi.string(),
 				datashopServerAddress: Joi.string(),
-				dataObject: Joi.object({
-					governorId: Joi.number(),
-					boxId: Joi.number(),
-					options: Joi.array().items(
-						Joi.string(),
-					),
+				dataFileURL: Joi.object({
+					url: Joi.string().min(0),
+					json: Joi.object({
+						governorId: Joi.number(),
+						boxId: Joi.number(),
+						options: Joi.array().items(
+							Joi.string(),
+						),
+					}),
 				}),
 			}).label("Demo Model"),
 			failAction: UniversalFunctions.failActionFunction,

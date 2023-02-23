@@ -22,16 +22,19 @@ const createGovernorRoute = {
 			payload: Joi.object({
 				jobID: Joi.string(),
 				datashopServerAddress: Joi.string(),
-				dataObject: Joi.object({
-					proposal: Joi.string(),
-					funding: Joi.number(),
-					governorToken: Joi.number(),
-					tokenAmount: Joi.number(),
-					choiceNumber: Joi.number(),
-					votingEnd: Joi.number(),
-					options: Joi.array().items(
-						Joi.string(),
-					),
+				dataFileURL: Joi.object({
+					url: Joi.string().min(0),
+					json: Joi.object({
+						proposal: Joi.string(),
+						funding: Joi.number(),
+						governorToken: Joi.number(),
+						tokenAmount: Joi.number(),
+						choiceNumber: Joi.number(),
+						votingEnd: Joi.number(),
+						options: Joi.array().items(
+							Joi.string(),
+						),
+					}),
 				}),
 			}).label("Demo Model"),
 			failAction: UniversalFunctions.failActionFunction,

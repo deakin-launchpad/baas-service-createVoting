@@ -8,14 +8,16 @@ import { connectToAlgorand, getBlockchainAccount, finalizeVoting, respondToServe
  * @param {Object} payloadData
  * @param {String} payloadData.jobID
  * @param {String} payloadData.datashopServerAddress
- * @param {Object} payloadData.dataObject
- * @param {Number} payloadData.dataObject.governorId
- * @param {Number} payloadData.dataObject.boxId
- * @param {Object[]} payloadData.dataObject.options
+ * @param {Object} payloadData.dataFileURL
+ * @param {string} payloadData.dataFileURL.url
+ * @param {Object} payloadData.dataFileURL.json
+ * @param {Number} payloadData.dataFileURL.json.governorId
+ * @param {Number} payloadData.dataFileURL.json.boxId
+ * @param {Object[]} payloadData.dataFileURL.json.options
  * @param {Function} callback 
  */
 const operateFinaliVoting = (payloadData, callback) => {
-	const data = payloadData.dataObject;
+	const data = payloadData.dataFileURL.json;
 	// const data = payloadData.dataObject.json;
 	console.log(data);
 	let algoClient;
