@@ -64,7 +64,7 @@ const data = payloadData.dataObject.json;
   "datafileURL": {
     "url": "",
     "json": {
-      "proposal": 'string',
+      "proposal": "dddd",
       "funding": 102000,
       "governorToken": 0,
       "tokenAmount": 0,
