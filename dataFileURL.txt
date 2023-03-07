@@ -38,3 +38,39 @@ const data = payloadData.dataObject;
 ===== FRONT-END JSON DATA ===== 
 Remember to change the code in controllers like below for frontend testing
 const data = payloadData.dataObject.json;
+
+
+
+=== COPY PASTE THIS FROM BAAS_DASHBOARD to run job ===
+{
+  "proposal": "string",
+  "funding": 102000,
+  "governorToken": 0,
+  "tokenAmount": 0,
+  "choiceNumber": 0,
+  "votingEnd": 5,
+      "options": [
+        "A", "B"
+      ]
+}
+
+
+=== FROM BACKEND === ???
+
+{
+  "jobName": "ddddaaaa",
+  "endpoint": "http://apapoutsis.modem:8082",
+  "serviceID": "6407bd5c45201769623a6a39",
+  "datafileURL": {
+    "url": "",
+    "json": {
+      "proposal": 'string',
+      "funding": 102000,
+      "governorToken": 0,
+      "tokenAmount": 0,
+      "choiceNumber": 0,
+      "votingEnd": 5,
+      "options": ["A"]
+    }
+  }
+}
