@@ -4,21 +4,20 @@ const ERROR = UniversalFunctions.CONFIG.APP_CONSTANTS.STATUS_MSG.ERROR;
 import { connectToAlgorand, getBlockchainAccount, deployBox, respondToServer, deployGovernor } from "../../helpers/helperFunctions.js";
 
 /**
- *
+ * 
  * @param {Object} payloadData
  * @param {String} payloadData.jobID
  * @param {String} payloadData.datashopServerAddress
  * @param {Object} payloadData.dataFileURL
  * @param {string} payloadData.dataFileURL.url
  * @param {Object} payloadData.dataFileURL.json
- * @param {Number} payloadData.dataFileURL.json.funding
  * @param {String} payloadData.dataFileURL.json.proposal
  * @param {Number} payloadData.dataFileURL.json.governorToken
  * @param {Object[]} payloadData.dataFileURL.json.options
  * @param {Number} payloadData.dataFileURL.json.tokenAmount
  * @param {Number} payloadData.dataFileURL.json.choiceNumber
  * @param {Number} payloadData.dataFileURL.json.votingEnd
- * @param {Function} callback
+ * @param {Function} callback 
  */
 const createVoting = (payloadData, callback) => {
 	const data = payloadData.dataFileURL.json;
@@ -50,13 +49,12 @@ const createVoting = (payloadData, callback) => {
 		deployGovernor: (cb) => {
 			const governorData = {
 				proposal: data.proposal,
-				funding: data.funding,
 				options: data.options,
 				governorToken: data.governorToken,
 				tokenAmount: data.tokenAmount,
 				choiceNumber: data.choiceNumber,
 				votingEnd: data.votingEnd,
-			};
+			}
 			deployGovernor(algoClient, account, governorData, (err, result) => {
 				if (err) return cb(err);
 				if (!result) return cb(ERROR.APP_ERROR);

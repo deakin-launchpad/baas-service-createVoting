@@ -4,7 +4,8 @@ import createBox from "../contracts/createBox.js";
 import clearBox from "../contracts/clearBox.js";
 import createGovernor from "../contracts/createGovernor.js";
 import clearGovernor from "../contracts/clearGovernor.js";
-import e from "cors";
+import createIdea from "../contracts/createIdea.js";
+import clearIdea from "../contracts/createIdea.js";
 
 /**
  *
@@ -223,7 +224,7 @@ export const deployGovernor = async (algoClient, account, data, callback) => {
 		console.log("The application ID is: " + appId);
 		let appAddr = algosdk.getApplicationAddress(appId);
 		console.log("The application address is: " + appAddr);
-		await payAlgod(algoClient, account, appAddr, parseInt(data.funding));
+		await payAlgod(algoClient, account, appAddr, parseInt(101000));
 		await addOptions(algoClient, account, appId, data.options);
 		callback(null, appId);
 
@@ -354,3 +355,58 @@ export const finalizeVoting = async (algoClient, account, data, callback) => {
 		callback(err, null);
 	}
 }
+
+export const deployIdea = async (algoClient, account, data, callback) => {
+	console.log("=== CREATE IDEA ===");
+	try {
+		let params = await algoClient.getTransactionParams().do();
+		let senderAddr = account.addr
+		let counterProgram = await compileProgram(algoClient, createIdea);
+		let clearProgram = await compileProgram(algoClient, clearIdea);
+		let onComplete = algosdk.OnApplicationComplete.NoOpOC;
+
+		let localInts = 10;
+		let localBytes = 5;
+		let globalInts = 32;
+		let globalBytes = 32;
+
+		let accounts = [data.creator];
+		let foreignApps = undefined;
+		let foreignAssets = undefined;
+		let appArgs = [];
+		appArgs.push(EncodeBytes(data.name), EncodeBytes(data.description), EncodeBytes(data.video_url), EncodeBytes(data.slide_url));
+
+		let deployContract = algosdk.makeApplicationCreateTxn(
+			senderAddr,
+			params,
+			onComplete,
+			counterProgram,
+			clearProgram,
+			localInts,
+			localBytes,
+			globalInts,
+			globalBytes,
+			appArgs,
+			accounts,
+			foreignApps,
+			foreignAssets
+		);
+		let signedTxn = deployContract.signTxn(account.sk);
+
+		// Submit the transaction
+		let tx = await algoClient.sendRawTransaction(signedTxn).do();
+		let confirmedTxn = await algosdk.waitForConfirmation(algoClient, tx.txId, 4);
+		let transactionResponse = await algoClient.pendingTransactionInformation(tx.txId).do();
+		let appId = transactionResponse["application-index"];
+
+		// Print the completed transaction and new ID
+		console.log("Transaction " + tx.txId + " confirmed in round " + confirmedTxn["confirmed-round"]);
+		console.log("The idea application ID is: " + appId);
+		callback(null, appId);
+
+	} catch (err) {
+		console.log(err);
+		callback(err, null);
+	}
+}
+

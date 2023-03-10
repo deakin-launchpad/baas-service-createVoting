@@ -1,7 +1,7 @@
 import async from "async";
 import UniversalFunctions from "../../utils/universalFunctions.js";
 const ERROR = UniversalFunctions.CONFIG.APP_CONSTANTS.STATUS_MSG.ERROR;
-import { connectToAlgorand, getBlockchainAccount, finalizeVoting, respondToServer} from "../../helpers/helperFunctions.js";
+import { connectToAlgorand, getBlockchainAccount, deployIdea, respondToServer } from "../../helpers/helperFunctions.js";
 
 /**
  * 
@@ -11,18 +11,20 @@ import { connectToAlgorand, getBlockchainAccount, finalizeVoting, respondToServe
  * @param {Object} payloadData.dataFileURL
  * @param {string} payloadData.dataFileURL.url
  * @param {Object} payloadData.dataFileURL.json
- * @param {Number} payloadData.dataFileURL.json.governorId
- * @param {Number} payloadData.dataFileURL.json.boxId
- * @param {Object[]} payloadData.dataFileURL.json.options
+ * @param {String} payloadData.dataFileURL.json.creator
+ * @param {String} payloadData.dataFileURL.json.name
+ * @param {String} payloadData.dataFileURL.json.description
+ * @param {String} payloadData.dataFileURL.json.video_url
+ * @param {String} payloadData.dataFileURL.json.slide_url
  * @param {Function} callback 
  */
-const operateFinaliVoting = (payloadData, callback) => {
+const createIdea = (payloadData, callback) => {
 	const data = payloadData.dataFileURL.json;
 	// const data = payloadData.dataObject.json;
 	console.log(data);
 	let algoClient;
 	let account;
-	let votingResult;
+	let appId;
 
 	const tasks = {
 		connectToBlockchain: (cb) => {
@@ -35,27 +37,29 @@ const operateFinaliVoting = (payloadData, callback) => {
 			if (!account) return cb(ERROR.APP_ERROR);
 			cb();
 		},
-		finalizeVoting: (cb) => {
-			const requiredData = {
-				governorId: data.governorId,
-				boxId: data.boxId,
-				options: data.options,
+		createIdea: (cb) => {
+			const ideaData = {
+				creator: data.creator,
+				name: data.name,
+				description: data.description,
+				video_url: data.video_url,
+				slide_url: data.slide_url,
 			}
-			finalizeVoting(algoClient, account, requiredData, (err, result) => {
+			deployIdea(algoClient, account, ideaData, (err, result) => {
 				if (err) return cb(err);
 				if (!result) return cb(ERROR.APP_ERROR);
-				votingResult = result;
+				appId = result;
 				cb();
 			});
 		},
 		response: (cb) => {
-			const response = { votingResult };
+			const response = { appId };
 			console.log(response);
 			respondToServer(payloadData, response, (err, result) => {
 				if (err) return cb(err);
 				console.log(result);
-			});
-			cb();
+				cb();
+			})
 		},
 	};
 	async.series(tasks, (err, result) => {
@@ -64,4 +68,4 @@ const operateFinaliVoting = (payloadData, callback) => {
 	});
 };
 
-export default operateFinaliVoting;
+export default createIdea;

@@ -1,45 +1,4 @@
 
-===== Back-end JSON DATA =====  
-Remember to change the code in controllers like below for backend testing
-const data = payloadData.dataObject;
-
-// Create a voting governor SC (returns both the governor and box ID) 
-{
-  "jobID": "string",
-  "datashopServerAddress": "string",
-  "dataObject": {
-    "proposal": "string",
-    "funding": 102000,
-    "governorToken": 0,
-    "tokenAmount": 0,
-    "choiceNumber": 0,
-    "votingEnd": 5,
-    "options": [
-      "A", "B"
-    ]
-  }
-}
-
-// finalize the voting and get the result (returns the voting result)
-{
-  "jobID": "string",
-  "datashopServerAddress": "string",
-  "dataObject": {
-    "governorId": 160245523,
-    "boxId": 160245521,
-    "options": [
-      "A","B"
-    ]
-  }
-}
-
-
-
-===== FRONT-END JSON DATA ===== 
-Remember to change the code in controllers like below for frontend testing
-const data = payloadData.dataObject.json;
-
-
 
 === COPY PASTE THIS FROM BAAS_DASHBOARD to run job ===
 {
