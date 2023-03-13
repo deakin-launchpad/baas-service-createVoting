@@ -4,7 +4,7 @@ const ERROR = UniversalFunctions.CONFIG.APP_CONSTANTS.STATUS_MSG.ERROR;
 import { connectToAlgorand, getBlockchainAccount, deployBox, respondToServer, deployGovernor } from "../../helpers/helperFunctions.js";
 
 /**
- * 
+ *
  * @param {Object} payloadData
  * @param {String} payloadData.jobID
  * @param {String} payloadData.datashopServerAddress
@@ -17,7 +17,7 @@ import { connectToAlgorand, getBlockchainAccount, deployBox, respondToServer, de
  * @param {Number} payloadData.dataFileURL.json.tokenAmount
  * @param {Number} payloadData.dataFileURL.json.choiceNumber
  * @param {Number} payloadData.dataFileURL.json.votingEnd
- * @param {Function} callback 
+ * @param {Function} callback
  */
 const createVoting = (payloadData, callback) => {
 	const data = payloadData.dataFileURL.json;
@@ -54,7 +54,7 @@ const createVoting = (payloadData, callback) => {
 				tokenAmount: data.tokenAmount,
 				choiceNumber: data.choiceNumber,
 				votingEnd: data.votingEnd,
-			}
+			};
 			deployGovernor(algoClient, account, governorData, (err, result) => {
 				if (err) return cb(err);
 				if (!result) return cb(ERROR.APP_ERROR);
@@ -62,19 +62,23 @@ const createVoting = (payloadData, callback) => {
 				cb();
 			});
 		},
-		response: (cb) => {
-			const response = { appId, boxId };
-			console.log(response);
-			respondToServer(payloadData, response, (err, result) => {
-				if (err) return cb(err);
-				console.log(result);
-			});
-			cb();
-		},
 	};
 	async.series(tasks, (err, result) => {
-		if (err) return callback(err);
-		return callback(null, { appId, boxId });
+		let returnData;
+		if (err || !appId || !boxId) {
+			// respond to server with error
+			returnData = null;
+		} else {
+			// respond to server with success
+			returnData = { appId, boxId };
+		}
+		respondToServer(payloadData, returnData, (err, result) => {
+			if (err) {
+				console.log(err);
+			} else {
+				console.log(result);
+			}
+		});
 	});
 };
 

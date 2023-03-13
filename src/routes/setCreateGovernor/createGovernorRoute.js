@@ -11,12 +11,8 @@ const createGovernorRoute = {
 		tags: ["api"],
 		handler: function (request, h) {
 			var payloadData = request.payload;
-			return new Promise((resolve, reject) => {
-				Controller.SetCreateGovernor(payloadData, function (err, data) {
-					if (err) reject(UniversalFunctions.sendError(err));
-					else resolve(UniversalFunctions.sendSuccess(Config.APP_CONSTANTS.STATUS_MSG.SUCCESS.DEFAULT, data));
-				});
-			});
+			Controller.SetCreateGovernor(payloadData);
+			return UniversalFunctions.sendSuccess(Config.APP_CONSTANTS.STATUS_MSG.SUCCESS.DEFAULT, {});
 		},
 		validate: {
 			payload: Joi.object({
@@ -30,9 +26,7 @@ const createGovernorRoute = {
 						tokenAmount: Joi.number().required(),
 						choiceNumber: Joi.number().required(),
 						votingEnd: Joi.number().required(),
-						options: Joi.array().items(
-							Joi.string(),
-						).required(),
+						options: Joi.array().items(Joi.string()).required(),
 					}),
 				}),
 			}).label("Demo Model"),
