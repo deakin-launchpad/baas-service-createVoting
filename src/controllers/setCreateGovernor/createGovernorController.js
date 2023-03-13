@@ -11,12 +11,12 @@ import { connectToAlgorand, getBlockchainAccount, deployBox, respondToServer, de
  * @param {Object} payloadData.dataFileURL
  * @param {string} payloadData.dataFileURL.url
  * @param {Object} payloadData.dataFileURL.json
- * @param {String} payloadData.dataFileURL.json.proposal
- * @param {Number} payloadData.dataFileURL.json.governorToken
- * @param {Object[]} payloadData.dataFileURL.json.options
+ * @param {String} payloadData.dataFileURL.json.name
+ * @param {Number} payloadData.dataFileURL.json.governanceToken
+ * @param {Object[]} payloadData.dataFileURL.json.ideas
  * @param {Number} payloadData.dataFileURL.json.tokenAmount
  * @param {Number} payloadData.dataFileURL.json.choiceNumber
- * @param {Number} payloadData.dataFileURL.json.votingEnd
+ * @param {Number} payloadData.dataFileURL.json.votingCloseTime
  * @param {Function} callback
  */
 const createVoting = (payloadData, callback) => {
@@ -48,12 +48,12 @@ const createVoting = (payloadData, callback) => {
 		},
 		deployGovernor: (cb) => {
 			const governorData = {
-				proposal: data.proposal,
-				options: data.options,
-				governorToken: data.governorToken,
+				name: data.name,
+				ideas: data.ideas,
+				governanceToken: data.governanceToken,
 				tokenAmount: data.tokenAmount,
 				choiceNumber: data.choiceNumber,
-				votingEnd: data.votingEnd,
+				votingCloseTime: data.votingCloseTime,
 			};
 			deployGovernor(algoClient, account, governorData, (err, result) => {
 				if (err) return cb(err);

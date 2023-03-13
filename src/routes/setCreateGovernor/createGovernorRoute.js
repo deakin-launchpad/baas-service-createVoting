@@ -21,12 +21,12 @@ const createGovernorRoute = {
 				dataFileURL: Joi.object({
 					url: Joi.string().min(0),
 					json: Joi.object({
-						proposal: Joi.string().required(),
-						governorToken: Joi.number().required(),
+						name: Joi.string().required(),
+						governanceToken: Joi.number().required(),
 						tokenAmount: Joi.number().required(),
 						choiceNumber: Joi.number().required(),
-						votingEnd: Joi.number().required(),
-						options: Joi.array().items(Joi.string()).required(),
+						votingCloseTime: Joi.number().required(),
+						ideas: Joi.array().items(Joi.string()).required(),
 					}),
 				}),
 			}).label("Demo Model"),

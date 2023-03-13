@@ -17,14 +17,14 @@ export const connectToAlgorand = (token, server, port) => {
 	console.log("=== CONNECT TO NETWORK ===");
 	const algoClient = new algosdk.Algodv2(token, server, port);
 	return algoClient;
-}
+};
 
 export const getBlockchainAccount = () => {
 	console.log("=== GET ACCOUNT ===");
 	const account = algosdk.mnemonicToSecretKey(process.env.MNEMONIC);
 	console.log("Account: " + account.addr);
 	return account;
-}
+};
 
 /**
  *
@@ -53,7 +53,7 @@ export const createAndSignTransaction = async (algoClient, account, transaction,
 			return callback(err);
 		});
 	return signed;
-}
+};
 
 /**
  *
@@ -74,7 +74,7 @@ export const sendTransaction = async (algoClient, signedTx, txnId, cb) => {
 			return cb(e);
 		});
 	return cb();
-}
+};
 
 /**
  *
@@ -98,13 +98,15 @@ export const respondToServer = (payloadData, data, callback) => {
 			jobid: service.jobID,
 		};
 	}
-	axios.put(destination, lambdaInput).then((res) => {
-		callback(null, "Job responded");
-	})
+	axios
+		.put(destination, lambdaInput)
+		.then((res) => {
+			callback(null, "Job responded");
+		})
 		.catch((e) => {
 			callback(e, null);
 		});
-}
+};
 
 const compileProgram = async (client, programSource) => {
 	let encoder = new TextEncoder();
@@ -112,23 +114,22 @@ const compileProgram = async (client, programSource) => {
 	let compileResponse = await client.compile(programBytes).do();
 	let compiledBytes = new Uint8Array(Buffer.from(compileResponse.result, "base64"));
 	return compiledBytes;
-}
+};
 
 const EncodeBytes = (utf8String) => {
 	let enc = new TextEncoder();
 	return enc.encode(utf8String);
-}
+};
 
-const DecodeBase64 = (base64) =>{
-	return Buffer.from(base64, 'base64').toString('utf8');
-}
-
+const DecodeBase64 = (base64) => {
+	return Buffer.from(base64, "base64").toString("utf8");
+};
 
 export const deployBox = async (algoClient, account, callback) => {
 	console.log("=== DEPLOY RESULT BOX ===");
 	try {
 		let params = await algoClient.getTransactionParams().do();
-		let senderAddr = account.addr
+		let senderAddr = account.addr;
 		let counterProgram = await compileProgram(algoClient, createBox);
 		let clearProgram = await compileProgram(algoClient, clearBox);
 		let onComplete = algosdk.OnApplicationComplete.NoOpOC;
@@ -174,13 +175,13 @@ export const deployBox = async (algoClient, account, callback) => {
 		console.log(err);
 		callback(err, null);
 	}
-}
+};
 
 export const deployGovernor = async (algoClient, account, data, callback) => {
 	console.log("=== DEPLOY GOVERNOR CONTRACT ===");
 	try {
 		let params = await algoClient.getTransactionParams().do();
-		let senderAddr = account.addr
+		let senderAddr = account.addr;
 		let counterProgram = await compileProgram(algoClient, createGovernor);
 		let clearProgram = await compileProgram(algoClient, clearGovernor);
 		let onComplete = algosdk.OnApplicationComplete.NoOpOC;
@@ -192,9 +193,9 @@ export const deployGovernor = async (algoClient, account, data, callback) => {
 
 		let accounts = undefined;
 		let foreignApps = undefined;
-		let foreignAssets = [data.governorToken];
+		let foreignAssets = [data.governanceToken];
 		let appArgs = [];
-		appArgs.push(EncodeBytes(data.proposal), encodeUint64(data.tokenAmount), encodeUint64(data.choiceNumber), encodeUint64(data.votingEnd));
+		appArgs.push(EncodeBytes(data.name), encodeUint64(data.tokenAmount), encodeUint64(data.choiceNumber), encodeUint64(data.votingCloseTime));
 
 		let deployContract = algosdk.makeApplicationCreateTxn(
 			senderAddr,
@@ -225,14 +226,13 @@ export const deployGovernor = async (algoClient, account, data, callback) => {
 		let appAddr = algosdk.getApplicationAddress(appId);
 		console.log("The application address is: " + appAddr);
 		await payAlgod(algoClient, account, appAddr, parseInt(101000));
-		await addOptions(algoClient, account, appId, data.options);
+		await addOptions(algoClient, account, appId, data.ideas);
 		callback(null, appId);
-
 	} catch (err) {
 		console.log(err);
 		callback(err, null);
 	}
-}
+};
 
 const payAlgod = async (algoClient, senderAccount, receiver, amount) => {
 	console.log("=== fund contract ===");
@@ -241,32 +241,35 @@ const payAlgod = async (algoClient, senderAccount, receiver, amount) => {
 	let closeReminderTo = undefined;
 	let note = undefined;
 	let rekeyTo = undefined;
-	let payment = algosdk.makePaymentTxnWithSuggestedParams(
-		senderAddr,
-		receiver,
-		amount,
-		closeReminderTo,
-		note,
-		params,
-		rekeyTo);
+	let payment = algosdk.makePaymentTxnWithSuggestedParams(senderAddr, receiver, amount, closeReminderTo, note, params, rekeyTo);
 	let signedTxn = payment.signTxn(senderAccount.sk);
 
 	// Submit the transaction
 	let tx = await algoClient.sendRawTransaction(signedTxn).do();
 	let confirmedTxn = await algosdk.waitForConfirmation(algoClient, tx.txId, 10);
-	console.log(amount + " algod has been transferred from " + senderAddr + " to " + receiver + " in the transaction " + tx.txId + " confirmed in round " + confirmedTxn["confirmed-round"]);
-}
+	console.log(
+		amount +
+			" algod has been transferred from " +
+			senderAddr +
+			" to " +
+			receiver +
+			" in the transaction " +
+			tx.txId +
+			" confirmed in round " +
+			confirmedTxn["confirmed-round"]
+	);
+};
 
 const addOptions = async (algoClient, senderAccount, companyId, options) => {
 	console.log("=== add voting options (up to 15) ===");
 	let senderAddr = senderAccount.addr;
 	let params = await algoClient.getTransactionParams().do();
-	let operation = "add_options"
+	let operation = "add_options";
 	let appArgs = [];
 	appArgs.push(EncodeBytes(operation));
 	for (const property in options) {
 		appArgs.push(EncodeBytes(options[property]));
-	};
+	}
 	let accounts = undefined;
 	let foreignApps = undefined;
 	let foreignAssets = undefined;
@@ -274,7 +277,8 @@ const addOptions = async (algoClient, senderAccount, companyId, options) => {
 	let lease = undefined;
 	let rekeyTo = undefined;
 	let boxes = undefined;
-	let governorAddOptions = algosdk.makeApplicationNoOpTxn(senderAddr,
+	let governorAddOptions = algosdk.makeApplicationNoOpTxn(
+		senderAddr,
 		params,
 		companyId,
 		appArgs,
@@ -284,83 +288,84 @@ const addOptions = async (algoClient, senderAccount, companyId, options) => {
 		note,
 		lease,
 		rekeyTo,
-		boxes);
+		boxes
+	);
 	let signedTxn = governorAddOptions.signTxn(senderAccount.sk);
 
 	// Submit the transaction
 	let tx = await algoClient.sendRawTransaction(signedTxn).do();
 	let confirmedTxn = await algosdk.waitForConfirmation(algoClient, tx.txId, 4);
 	console.log("Voting governor has added options in the transaction " + tx.txId + " confirmed in round " + confirmedTxn["confirmed-round"]);
-}
+};
 
 export const finalizeVoting = async (algoClient, account, data, callback) => {
 	console.log("=== FINALIZE VOTING ===");
 	try {
-	let senderAddr = account.addr;
-	let params = await algoClient.getTransactionParams().do();
-	let operation = "finalize"
-	let appArgs = [];
-	appArgs.push(EncodeBytes(operation));
-	for (const property in data.options) {
-		appArgs.push(EncodeBytes(data.options[property]));
-	};
-	let accounts = undefined;
-	let foreignApps = [data.boxId];
-	let foreignAssets = undefined;
-	let note = undefined;
-	let lease = undefined;
-	let rekeyTo = undefined;
-	let boxes = undefined;
-	let finalizeVotingOperation = algosdk.makeApplicationNoOpTxn(senderAddr,
-		params,
-		data.governorId,
-		appArgs,
-		accounts,
-		foreignApps,
-		foreignAssets,
-		note,
-		lease,
-		rekeyTo,
-		boxes);
-	let signedTxn = finalizeVotingOperation.signTxn(account.sk);
-	
-	// Submit the transaction
-	let tx = await algoClient.sendRawTransaction(signedTxn).do();
-	let confirmedTxn = await algosdk.waitForConfirmation(algoClient, tx.txId, 4);
-	console.log("Voting " + data.governorId + " has been finalized at the transaction " + tx.txId + " confirmed in round " + confirmedTxn["confirmed-round"]);
-	let resultApp = await algoClient.getApplicationByID(data.boxId).do();
-	let resultStates = resultApp.params['global-state'];
-	let result;
-	if (resultStates.length == 3){
-		result = ["invalid"]
-		console.log("Voting " + data.governorId + " is invalid, details can be found in the states of the governor application.");
-	}
-	else if(resultStates.length == 4){
-		let constantParams = ["completed", "governor", "proposal"];
-		let votedOption, numberOfVoting;
-		for (const property in resultStates) {
-			if (!constantParams.includes(DecodeBase64(resultStates[property].key))){
-				votedOption = DecodeBase64(resultStates[property].key);
-				numberOfVoting = resultStates[property].value.uint;
-				result = ["completed", votedOption, numberOfVoting];
-				break;
-			};
-		};
-		console.log("Voting " + data.governorId + " is completed -- First place: " + votedOption + ", votes: " + numberOfVoting);
-	}
-	else callback(err, null);
-	callback(null, result);
+		let senderAddr = account.addr;
+		let params = await algoClient.getTransactionParams().do();
+		let operation = "finalize";
+		let appArgs = [];
+		appArgs.push(EncodeBytes(operation));
+		for (const property in data.options) {
+			appArgs.push(EncodeBytes(data.options[property]));
+		}
+		let accounts = undefined;
+		let foreignApps = [data.boxId];
+		let foreignAssets = undefined;
+		let note = undefined;
+		let lease = undefined;
+		let rekeyTo = undefined;
+		let boxes = undefined;
+		let finalizeVotingOperation = algosdk.makeApplicationNoOpTxn(
+			senderAddr,
+			params,
+			data.governorId,
+			appArgs,
+			accounts,
+			foreignApps,
+			foreignAssets,
+			note,
+			lease,
+			rekeyTo,
+			boxes
+		);
+		let signedTxn = finalizeVotingOperation.signTxn(account.sk);
+
+		// Submit the transaction
+		let tx = await algoClient.sendRawTransaction(signedTxn).do();
+		let confirmedTxn = await algosdk.waitForConfirmation(algoClient, tx.txId, 4);
+		console.log("Voting " + data.governorId + " has been finalized at the transaction " + tx.txId + " confirmed in round " + confirmedTxn["confirmed-round"]);
+		let resultApp = await algoClient.getApplicationByID(data.boxId).do();
+		let resultStates = resultApp.params["global-state"];
+		let result;
+		if (resultStates.length == 3) {
+			result = ["invalid"];
+			console.log("Voting " + data.governorId + " is invalid, details can be found in the states of the governor application.");
+		} else if (resultStates.length == 4) {
+			let constantParams = ["completed", "governor", "proposal"];
+			let votedOption, numberOfVoting;
+			for (const property in resultStates) {
+				if (!constantParams.includes(DecodeBase64(resultStates[property].key))) {
+					votedOption = DecodeBase64(resultStates[property].key);
+					numberOfVoting = resultStates[property].value.uint;
+					result = ["completed", votedOption, numberOfVoting];
+					break;
+				}
+			}
+			console.log("Voting " + data.governorId + " is completed -- First place: " + votedOption + ", votes: " + numberOfVoting);
+		} else callback(err, null);
+		callback(null, result);
 	} catch (err) {
 		console.log(err);
 		callback(err, null);
 	}
-}
+};
 
 export const deployIdea = async (algoClient, account, data, callback) => {
 	console.log("=== CREATE IDEA ===");
 	try {
 		let params = await algoClient.getTransactionParams().do();
-		let senderAddr = account.addr
+		let senderAddr = account.addr;
 		let counterProgram = await compileProgram(algoClient, createIdea);
 		let clearProgram = await compileProgram(algoClient, clearIdea);
 		let onComplete = algosdk.OnApplicationComplete.NoOpOC;
@@ -403,10 +408,8 @@ export const deployIdea = async (algoClient, account, data, callback) => {
 		console.log("Transaction " + tx.txId + " confirmed in round " + confirmedTxn["confirmed-round"]);
 		console.log("The idea application ID is: " + appId);
 		callback(null, appId);
-
 	} catch (err) {
 		console.log(err);
 		callback(err, null);
 	}
-}
-
+};
