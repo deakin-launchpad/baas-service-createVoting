@@ -1,6 +1,6 @@
-# fly.toml file generated for baas-service-createcompany on 2023-01-24T21:41:08+11:00
+# fly.toml file generated for baas-service-createvote on 2023-03-17T14:12:39+11:00
 
-app = "baas-service-createcompany"
+app = "baas-service-createvote"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []

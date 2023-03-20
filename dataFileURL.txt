@@ -2,13 +2,12 @@
 
 === COPY PASTE THIS FROM BAAS_DASHBOARD to run job ===
 {
-  "proposal": "string",
-  "funding": 102000,
-  "governorToken": 0,
+  "name": "string",
+  "governanceToken": 0,
   "tokenAmount": 0,
   "choiceNumber": 0,
-  "votingEnd": 5,
-      "options": [
+  "votingCloseTime": 5,
+      "ideas": [
         "A", "B"
       ]
 }
@@ -23,13 +22,14 @@
   "datafileURL": {
     "url": "",
     "json": {
-      "proposal": "dddd",
-      "funding": 102000,
-      "governorToken": 0,
+      "name": "string",
+      "governanceToken": 0,
       "tokenAmount": 0,
       "choiceNumber": 0,
-      "votingEnd": 5,
-      "options": ["A"]
+      "votingCloseTime": 5,
+        "ideas": [
+          "A", "B"
+        ]
     }
   }
 }

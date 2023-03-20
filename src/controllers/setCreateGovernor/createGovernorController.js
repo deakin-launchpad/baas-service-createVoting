@@ -17,12 +17,10 @@ import { connectToAlgorand, getBlockchainAccount, deployBox, respondToServer, de
  * @param {Number} payloadData.dataFileURL.json.tokenAmount
  * @param {Number} payloadData.dataFileURL.json.choiceNumber
  * @param {Number} payloadData.dataFileURL.json.votingCloseTime
- * @param {Function} callback
  */
-const createVoting = (payloadData, callback) => {
+const createVoting = (payloadData) => {
 	const data = payloadData.dataFileURL.json;
 	// const data = payloadData.dataObject.json;
-	console.log(data);
 	let algoClient;
 	let account;
 	let appId;
