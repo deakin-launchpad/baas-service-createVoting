@@ -94,7 +94,7 @@ export const respondToServer = (payloadData, data, callback) => {
 		};
 	} else {
 		lambdaInput = {
-			insightFileURL: service.dataFileURL,
+			insightFileURL: "N/A", // failed job status
 			jobid: service.jobID,
 		};
 	}
@@ -260,7 +260,7 @@ const payAlgod = async (algoClient, senderAccount, receiver, amount) => {
 	);
 };
 
-const addOptions = async (algoClient, senderAccount, companyId, options) => {
+const addOptions = async (algoClient, senderAccount, appId, options) => {
 	console.log("=== add voting options (up to 15) ===");
 	let senderAddr = senderAccount.addr;
 	let params = await algoClient.getTransactionParams().do();
@@ -280,7 +280,7 @@ const addOptions = async (algoClient, senderAccount, companyId, options) => {
 	let governorAddOptions = algosdk.makeApplicationNoOpTxn(
 		senderAddr,
 		params,
-		companyId,
+		appId,
 		appArgs,
 		accounts,
 		foreignApps,

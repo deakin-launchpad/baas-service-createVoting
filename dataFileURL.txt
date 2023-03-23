@@ -7,9 +7,9 @@
   "tokenAmount": 0,
   "choiceNumber": 0,
   "votingCloseTime": 5,
-      "ideas": [
-        "A", "B"
-      ]
+  "ideas": [
+    "A", "B"
+  ]
 }
 
 
