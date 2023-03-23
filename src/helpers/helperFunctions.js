@@ -157,7 +157,8 @@ export const deployBox = async (algoClient, account, callback) => {
 			appArgs,
 			accounts,
 			foreignApps,
-			foreignAssets
+			foreignAssets,
+			Uint8Array.from([Math.random()*255, Math.random()*255, Math.random()*255])
 		);
 		let signedTxn = deployContract.signTxn(account.sk);
 
