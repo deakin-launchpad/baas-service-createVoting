@@ -51,7 +51,7 @@ const createIdea = (payloadData, callback) => {
 				appId = result;
 				cb();
 			});
-		},
+		}
 	};
 	async.series(tasks, (err, result) => {
 		let returnData;
