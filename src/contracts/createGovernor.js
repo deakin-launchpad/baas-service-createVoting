@@ -39,22 +39,22 @@ byte "finalize"
 bnz main_l11
 err
 main_l11:
-callsub finalizevoting_8
+callsub finalizevoting_7
 main_l12:
 int 0
 return
 main_l13:
-callsub addoptions_4
+callsub addoptions_2
 b main_l12
 main_l14:
-callsub voting_6
+callsub voting_5
 b main_l12
 main_l15:
 int 0
 return
 main_l16:
 int 0
-callsub optIntovote_5
+callsub optIntovote_3
 int 1
 return
 main_l17:
@@ -64,112 +64,54 @@ main_l18:
 int 0
 return
 main_l19:
-callsub oncreate_3
+callsub oncreate_1
 int 1
 return
 
 // convert_uint_to_bytes
 convertuinttobytes_0:
-store 19
-load 19
+store 14
+load 14
 int 0
 ==
 bnz convertuinttobytes_0_l5
 byte ""
-store 20
-load 19
-store 21
+store 15
+load 14
+store 16
 convertuinttobytes_0_l2:
-load 21
+load 16
 int 0
 >
 bnz convertuinttobytes_0_l4
-load 20
+load 15
 b convertuinttobytes_0_l6
 convertuinttobytes_0_l4:
-load 21
+load 16
 int 10
 %
-store 22
+store 17
 byte "0123456789"
-load 22
-load 22
+load 17
+load 17
 int 1
 +
 substring3
-load 20
+load 15
 concat
-store 20
-load 21
+store 15
+load 16
 int 10
 /
-store 21
+store 16
 b convertuinttobytes_0_l2
 convertuinttobytes_0_l5:
 byte "0"
 convertuinttobytes_0_l6:
 retsub
 
-// get_global_value
-getglobalvalue_1:
-store 7
-store 6
-store 5
-load 5
-load 6
-app_global_get_ex
-store 9
-store 8
-load 7
-byte "value"
-==
-bnz getglobalvalue_1_l4
-load 7
-byte "has_value"
-==
-bnz getglobalvalue_1_l3
-err
-getglobalvalue_1_l3:
-load 9
-retsub
-getglobalvalue_1_l4:
-load 8
-retsub
-int 0
-return
-
-// get_local_value
-getlocalvalue_2:
-store 26
-store 25
-store 24
-store 23
-load 23
-load 24
-load 25
-app_local_get_ex
-store 28
-store 27
-load 26
-byte "value"
-==
-bnz getlocalvalue_2_l4
-load 26
-byte "has_value"
-==
-bnz getlocalvalue_2_l3
-err
-getlocalvalue_2_l3:
-load 28
-retsub
-getlocalvalue_2_l4:
-load 27
-retsub
-int 0
-return
-
 // on_create
-oncreate_3:
+oncreate_1:
 global LatestTimestamp
 store 0
 int 0
@@ -205,7 +147,7 @@ app_global_put
 retsub
 
 // add_options
-addoptions_4:
+addoptions_2:
 global GroupSize
 int 1
 ==
@@ -216,20 +158,15 @@ int 0
 assert
 int 0
 store 4
-addoptions_4_l1:
+addoptions_2_l1:
 load 4
 int 1
 <
-bnz addoptions_4_l5
-global CurrentApplicationID
-byte "total_number_of_options"
-byte "has_value"
-callsub getglobalvalue_1
+bnz addoptions_2_l5
 byte "total_number_of_options"
 app_global_get
 int 0
 ==
-&&
 txn NumAppArgs
 int 2
 >=
@@ -239,18 +176,11 @@ int 0
 store 3
 int 1
 store 2
-addoptions_4_l3:
+addoptions_2_l3:
 load 2
 txn NumAppArgs
 <
-bz addoptions_4_l6
-load 2
-txnas ApplicationArgs
-btoi
-byte "creator"
-byte "has_value"
-callsub getglobalvalue_1
-assert
+bz addoptions_2_l6
 load 3
 int 1
 +
@@ -263,8 +193,8 @@ load 2
 int 1
 +
 store 2
-b addoptions_4_l3
-addoptions_4_l5:
+b addoptions_2_l3
+addoptions_2_l5:
 load 4
 gtxns RekeyTo
 global ZeroAddress
@@ -274,8 +204,8 @@ load 4
 int 1
 +
 store 4
-b addoptions_4_l1
-addoptions_4_l6:
+b addoptions_2_l1
+addoptions_2_l6:
 byte "total_number_of_options"
 load 3
 app_global_put
@@ -283,21 +213,49 @@ int 1
 return
 
 // optIn_to_vote
-optIntovote_5:
-store 10
+optIntovote_3:
+store 5
 global LatestTimestamp
 byte "voting_end"
 app_global_get
 <=
 assert
-load 10
+load 5
 byte "voted"
 int 0
 app_local_put
 retsub
 
+// get_global_value
+getglobalvalue_4:
+store 20
+store 19
+store 18
+load 18
+load 19
+app_global_get_ex
+store 22
+store 21
+load 20
+byte "value"
+==
+bnz getglobalvalue_4_l4
+load 20
+byte "has_value"
+==
+bnz getglobalvalue_4_l3
+err
+getglobalvalue_4_l3:
+load 22
+retsub
+getglobalvalue_4_l4:
+load 21
+retsub
+int 0
+return
+
 // voting
-voting_6:
+voting_5:
 global GroupSize
 int 1
 ==
@@ -307,34 +265,34 @@ int 0
 &&
 assert
 int 0
-store 18
-voting_6_l1:
-load 18
+store 13
+voting_5_l1:
+load 13
 int 1
 <
-bnz voting_6_l8
+bnz voting_5_l8
 byte "governor_token"
 app_global_get
-store 11
+store 6
 byte "min_token_to_vote"
 app_global_get
-store 12
+store 7
 byte "choose"
 app_global_get
-store 13
+store 8
 byte "voting_end"
 app_global_get
-store 14
+store 9
 txn Sender
 txna Assets 0
 asset_holding_get AssetBalance
-store 17
-store 16
+store 12
+store 11
 txn Sender
 int 0
 app_opted_in
 txna Assets 0
-load 11
+load 6
 ==
 &&
 byte "total_number_of_options"
@@ -343,18 +301,12 @@ int 0
 >
 &&
 global LatestTimestamp
-load 14
+load 9
 <=
 &&
-load 16
-load 12
+load 11
+load 7
 >=
-&&
-txn Sender
-global CurrentApplicationID
-byte "voted"
-byte "has_value"
-callsub getlocalvalue_2
 &&
 txn Sender
 byte "voted"
@@ -363,75 +315,75 @@ int 0
 ==
 &&
 txn NumAppArgs
-load 13
+load 8
 int 1
 +
 ==
 &&
 assert
 int 1
-store 15
-voting_6_l3:
-load 15
-load 13
+store 10
+voting_5_l3:
+load 10
+load 8
 <=
-bnz voting_6_l7
+bnz voting_5_l7
 int 1
-store 15
-voting_6_l5:
-load 15
-load 13
+store 10
+voting_5_l5:
+load 10
+load 8
 <=
-bz voting_6_l9
-load 15
+bz voting_5_l9
+load 10
 txnas ApplicationArgs
-load 15
+load 10
 txnas ApplicationArgs
 app_global_get
 int 1
 +
 app_global_put
 txn Sender
-load 15
+load 10
 callsub convertuinttobytes_0
-load 15
+load 10
 txnas ApplicationArgs
 app_local_put
-load 15
+load 10
 int 1
 +
-store 15
-b voting_6_l5
-voting_6_l7:
+store 10
+b voting_5_l5
+voting_5_l7:
 global CurrentApplicationID
-load 15
+load 10
 txnas ApplicationArgs
 byte "has_value"
-callsub getglobalvalue_1
-load 15
+callsub getglobalvalue_4
+load 10
 txnas ApplicationArgs
 app_global_get
 int 0
 >=
 &&
 assert
-load 15
+load 10
 int 1
 +
-store 15
-b voting_6_l3
-voting_6_l8:
-load 18
+store 10
+b voting_5_l3
+voting_5_l8:
+load 13
 gtxns RekeyTo
 global ZeroAddress
 ==
 assert
-load 18
+load 13
 int 1
 +
-store 18
-b voting_6_l1
-voting_6_l9:
+store 13
+b voting_5_l1
+voting_5_l9:
 txn Sender
 byte "voted"
 int 1
@@ -440,24 +392,24 @@ int 1
 return
 
 // activate_a_result_box
-activatearesultbox_7:
-store 40
-store 39
-store 38
+activatearesultbox_6:
+store 34
+store 33
+store 32
 byte "update_result"
-store 41
+store 35
 itxn_begin
 int appl
 itxn_field TypeEnum
-load 38
+load 32
 itxn_field ApplicationID
 int NoOp
 itxn_field OnCompletion
-load 41
+load 35
 itxn_field ApplicationArgs
-load 39
+load 33
 itxn_field ApplicationArgs
-load 40
+load 34
 itxn_field ApplicationArgs
 global CurrentApplicationID
 itxn_field Applications
@@ -465,7 +417,7 @@ itxn_submit
 retsub
 
 // finalize_voting
-finalizevoting_8:
+finalizevoting_7:
 global GroupSize
 int 1
 ==
@@ -475,154 +427,154 @@ int 0
 &&
 assert
 int 0
-store 37
-finalizevoting_8_l1:
-load 37
+store 31
+finalizevoting_7_l1:
+load 31
 int 1
 <
-bnz finalizevoting_8_l15
+bnz finalizevoting_7_l15
 byte "voting_end"
 app_global_get
-store 29
+store 23
 byte "total_number_of_options"
 app_global_get
-store 30
+store 24
 int 0
-store 32
+store 26
 byte ""
-store 35
+store 29
 int 0
-store 34
+store 28
 txna Applications 1
-store 36
+store 30
 global LatestTimestamp
-load 29
+load 23
 >
 global CurrentApplicationID
 byte "result_box"
 byte "has_value"
-callsub getglobalvalue_1
+callsub getglobalvalue_4
 &&
 byte "result_box"
 app_global_get
 int 0
 ==
 &&
-load 36
+load 30
 byte "governor"
 byte "has_value"
-callsub getglobalvalue_1
+callsub getglobalvalue_4
 &&
-load 36
+load 30
 byte "governor"
 byte "value"
-callsub getglobalvalue_1
+callsub getglobalvalue_4
 int 0
 ==
 &&
 txn NumAppArgs
-load 30
+load 24
 int 1
 +
 ==
 &&
 assert
 int 1
-store 31
-finalizevoting_8_l3:
-load 31
-load 30
+store 25
+finalizevoting_7_l3:
+load 25
+load 24
 <=
-bnz finalizevoting_8_l12
+bnz finalizevoting_7_l12
 int 1
-store 31
-finalizevoting_8_l5:
-load 31
-load 30
+store 25
+finalizevoting_7_l5:
+load 25
+load 24
 <=
-bnz finalizevoting_8_l9
-load 34
+bnz finalizevoting_7_l9
+load 28
 int 1
 ==
-bnz finalizevoting_8_l8
-load 36
+bnz finalizevoting_7_l8
+load 30
 byte "invalid"
 byte "invalid"
-callsub activatearesultbox_7
-b finalizevoting_8_l16
-finalizevoting_8_l8:
-load 36
+callsub activatearesultbox_6
+b finalizevoting_7_l16
+finalizevoting_7_l8:
+load 30
 byte "completed"
-load 35
-callsub activatearesultbox_7
-b finalizevoting_8_l16
-finalizevoting_8_l9:
-load 31
+load 29
+callsub activatearesultbox_6
+b finalizevoting_7_l16
+finalizevoting_7_l9:
+load 25
 txnas ApplicationArgs
 app_global_get
-store 33
-load 33
-load 32
+store 27
+load 27
+load 26
 ==
-bnz finalizevoting_8_l11
-finalizevoting_8_l10:
-load 31
+bnz finalizevoting_7_l11
+finalizevoting_7_l10:
+load 25
 int 1
 +
-store 31
-b finalizevoting_8_l5
-finalizevoting_8_l11:
-load 34
+store 25
+b finalizevoting_7_l5
+finalizevoting_7_l11:
+load 28
 int 1
 +
-store 34
-load 31
+store 28
+load 25
 txnas ApplicationArgs
-store 35
-b finalizevoting_8_l10
-finalizevoting_8_l12:
-load 31
+store 29
+b finalizevoting_7_l10
+finalizevoting_7_l12:
+load 25
 txnas ApplicationArgs
 app_global_get
-store 33
+store 27
 global CurrentApplicationID
-load 31
+load 25
 txnas ApplicationArgs
 byte "has_value"
-callsub getglobalvalue_1
-load 33
+callsub getglobalvalue_4
+load 27
 int 0
 >=
 &&
 assert
-load 33
-load 32
+load 27
+load 26
 >
-bnz finalizevoting_8_l14
-finalizevoting_8_l13:
-load 31
+bnz finalizevoting_7_l14
+finalizevoting_7_l13:
+load 25
 int 1
 +
-store 31
-b finalizevoting_8_l3
-finalizevoting_8_l14:
-load 33
-store 32
-b finalizevoting_8_l13
-finalizevoting_8_l15:
-load 37
+store 25
+b finalizevoting_7_l3
+finalizevoting_7_l14:
+load 27
+store 26
+b finalizevoting_7_l13
+finalizevoting_7_l15:
+load 31
 gtxns RekeyTo
 global ZeroAddress
 ==
 assert
-load 37
+load 31
 int 1
 +
-store 37
-b finalizevoting_8_l1
-finalizevoting_8_l16:
+store 31
+b finalizevoting_7_l1
+finalizevoting_7_l16:
 byte "result_box"
-load 36
+load 30
 app_global_put
 int 1
 return
