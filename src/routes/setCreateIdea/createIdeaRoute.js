@@ -11,12 +11,8 @@ const createIdeaRoute = {
 		tags: ["api"],
 		handler: function (request, h) {
 			var payloadData = request.payload;
-			return new Promise((resolve, reject) => {
-				Controller.SetCreateIdea(payloadData, function (err, data) {
-					if (err) reject(UniversalFunctions.sendError(err));
-					else resolve(UniversalFunctions.sendSuccess(Config.APP_CONSTANTS.STATUS_MSG.SUCCESS.DEFAULT, data));
-				});
-			});
+			Controller.SetCreateIdea(payloadData);
+			return UniversalFunctions.sendSuccess(Config.APP_CONSTANTS.STATUS_MSG.SUCCESS.DEFAULT, {});
 		},
 		validate: {
 			payload: Joi.object({
