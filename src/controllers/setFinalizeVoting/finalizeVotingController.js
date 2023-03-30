@@ -47,20 +47,24 @@ const operateFinaliVoting = (payloadData, callback) => {
 				votingResult = result;
 				cb();
 			});
-		},
-		response: (cb) => {
-			const response = { votingResult };
-			console.log(response);
-			respondToServer(payloadData, response, (err, result) => {
-				if (err) return cb(err);
-				console.log(result);
-			});
-			cb();
-		},
+		}
 	};
 	async.series(tasks, (err, result) => {
-		if (err) return callback(err);
-		return callback(null, { appId, vaultId, vaultAddress });
+		let returnData;
+		if (err || !appId) {
+			// respond to server with error
+			returnData = null;
+		} else {
+			// respond to server with success
+			returnData = { votingResult };
+		}
+		respondToServer(payloadData, returnData, (err, result) => {
+			if (err) {
+				console.log(err);
+			} else {
+				console.log(result);
+			}
+		});
 	});
 };
 
