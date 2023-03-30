@@ -26,7 +26,7 @@ const createGovernorRoute = {
 						tokenAmount: Joi.number().required(),
 						choiceNumber: Joi.number().required(),
 						votingCloseTime: Joi.number().required(),
-						ideas: Joi.array().items(Joi.string()).required(),
+						ideas: Joi.array().items(Joi.number()).required(),
 					}),
 				}),
 			}).label("Demo Model"),
