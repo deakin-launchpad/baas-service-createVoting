@@ -51,7 +51,7 @@ const operateFinaliVoting = (payloadData, callback) => {
 	};
 	async.series(tasks, (err, result) => {
 		let returnData;
-		if (err || !appId) {
+		if (err || !votingResult) {
 			// respond to server with error
 			returnData = null;
 		} else {
