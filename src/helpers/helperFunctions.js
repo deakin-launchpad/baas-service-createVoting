@@ -7,6 +7,12 @@ import clearGovernor from "../contracts/clearGovernor.js";
 import createIdea from "../contracts/createIdea.js";
 import clearIdea from "../contracts/createIdea.js";
 
+// Possible tank outcomes
+const TANK_OUTCOME = {
+	DRAW: "DRAW",
+    COMPLETED: "COMPLETED"
+}
+
 /**
  *
  * @param {String} token
@@ -340,20 +346,20 @@ export const finalizeVoting = async (algoClient, account, data, callback) => {
 		let resultStates = resultApp.params["global-state"];
 		let result;
 		if (resultStates.length == 3) {
-			result = ["invalid"];
+			result = [TANK_OUTCOME.DRAW];
 			console.log("Voting " + data.governorId + " is invalid, details can be found in the states of the governor application.");
 		} else if (resultStates.length == 4) {
 			let constantParams = ["completed", "governor", "proposal"];
-			let votedOption, numberOfVoting;
+			let votedOption, numberOfVotes;
 			for (const property in resultStates) {
 				if (!constantParams.includes(DecodeBase64(resultStates[property].key))) {
 					votedOption = DecodeBase64(resultStates[property].key);
-					numberOfVoting = resultStates[property].value.uint;
-					result = ["completed", votedOption, numberOfVoting];
+					numberOfVotes = resultStates[property].value.uint;
+					result = [TANK_OUTCOME.COMPLETED, votedOption, numberOfVotes];
 					break;
 				}
 			}
-			console.log("Voting " + data.governorId + " is completed -- First place: " + votedOption + ", votes: " + numberOfVoting);
+			console.log("Voting " + data.governorId + " is completed -- First place: " + votedOption + ", votes: " + numberOfVotes);
 		} else callback(err, null);
 		callback(null, result);
 	} catch (err) {
